@@ -4,13 +4,9 @@ const Intern = require('./lib/Intern');
 const inquirer = require('inquirer');
 const fs = require('fs');
 
-let manager
-let engineer
-let intern
-
-//Need to find a way for each new employee to create a new variable
-//add those variables to an array
-//Loop over the array when generating HTML
+let manager;
+let engineer = [];
+let intern = [];
 
 function init(){
     console.log("Welcome to team profile generator!")
@@ -94,7 +90,7 @@ function addEngineer() {
             }
         ])
         .then((answers) => {
-            engineer = new Engineer(answers.eNameInput, answers.eIdInput, answers.eEmailInput, answers.githubInput)
+            engineer.push(new Engineer(answers.eNameInput, answers.eIdInput, answers.eEmailInput, answers.githubInput))
             choiceHandler();
         })
 }
@@ -124,16 +120,46 @@ function addIntern() {
             }
         ])
         .then((answers) => {
-            intern = new Intern(answers.iNameInput, answers.iIdInput, answers.iEmailInput, answers.schoolInput)
+            intern.push(new Intern(answers.iNameInput, answers.iIdInput, answers.iEmailInput, answers.schoolInput));
             choiceHandler();
         })
 
 }
 
 function generateHTML(){
-    console.log(manager);
-    console.log(engineer);
-    console.log(intern);
+    fs.writeFile('./dist/index.html', 
+    `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <title>Team Profile</title>
+</head>
+<body>
+    <header class="p-3 text-center bg-danger text-light">
+        <h1>My Team</h1>
+    </header>
+    <main class="d-flex flex-wrap justify-content-center">
+        <div class="card mx-3 my-5" style="width: 18rem;">
+            <!--Section to be repeated for each employee-->
+            <div class="card-body bg-primary text-light">
+              <h5 class="card-title"><strong>Employee</strong></h5>
+              <p class="card-text">Employee Role</p>
+            </div>
+            <ul class="list-group list-group-flush p-3 bg-light">
+              <li class="list-group-item">ID:</li>
+              <li class="list-group-item">Email:</li>
+              <li class="list-group-item">Office/Github/School:</li>
+            </ul>
+        </div>
+    </main>
+</body>
+</html>
+    `,
+    (err) => err ? console.error(err) : console.log('HTML file created!'))
 }
 
 init();
