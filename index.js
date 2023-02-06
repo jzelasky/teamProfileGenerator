@@ -8,16 +8,38 @@ let manager
 let engineer
 let intern
 
-/*
-WHEN I select the engineer option
-THEN I am prompted to enter the engineer’s name, ID, email, and GitHub username, and I am taken back to the menu
-WHEN I select the intern option
-THEN I am prompted to enter the intern’s name, ID, email, and school, and I am taken back to the menu
-WHEN I decide to finish building my team
-THEN I exit the application, and the HTML is generated*/
+//Need to find a way for each new employee to create a new variable
+//add those variables to an array
+//Loop over the array when generating HTML
 
 function init(){
     console.log("Welcome to team profile generator!")
+    addManager();
+}
+    
+function choiceHandler () {
+    inquirer
+        .prompt([
+            {
+                type: 'list',
+                message: "What do you want to do now?",
+                name: 'choice',
+                choices: ['Add engineer', 'Add intern', 'Finish building my team']
+            }
+        ])
+        .then((answers) => {
+            if(String(answers.choice) === 'Add engineer'){
+                addEngineer();
+            } else if (String(answers.choice) === 'Add intern'){
+                addIntern();
+            } else {
+                generateHTML();
+            }
+        })
+   
+}
+
+function addManager () {
     inquirer
         .prompt([
             {
@@ -45,28 +67,6 @@ function init(){
             manager = new Manager(answers.mNameInput, answers.mIdInput, answers.mEmailInput, answers.OfficeInput)
             choiceHandler();
         })
-}
-
-function choiceHandler () {
-    inquirer
-        .prompt([
-            {
-                type: 'list',
-                message: "What do you want to do now?",
-                name: 'choice',
-                choices: ['Add engineer', 'Add intern', 'Finish building my team']
-            }
-        ])
-        .then((answers) => {
-            if(String(answers.choice) === 'Add engineer'){
-                addEngineer();
-            } else if (String(answers.choice) === 'Add intern'){
-                addIntern();
-            } else {
-                generateHTML();
-            }
-        })
-   
 }
 
 function addEngineer() {
@@ -98,7 +98,6 @@ function addEngineer() {
             choiceHandler();
         })
 }
-
 
 function addIntern() {
     inquirer
@@ -132,8 +131,9 @@ function addIntern() {
 }
 
 function generateHTML(){
-    console.log(intern)
-    console.log(engineer)
+    console.log(manager);
+    console.log(engineer);
+    console.log(intern);
 }
 
 init();
