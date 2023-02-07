@@ -7,6 +7,9 @@ const fs = require('fs');
 let manager;
 let engineer = [];
 let intern = [];
+let internHTML = '';
+let managerHTML = '';
+let engineerHTML = '';
 
 function init(){
     console.log("Welcome to team profile generator!")
@@ -29,6 +32,9 @@ function choiceHandler () {
             } else if (String(answers.choice) === 'Add intern'){
                 addIntern();
             } else {
+                genreateManagerCard();
+                generateEngineerCard();
+                generateInternCard();
                 generateHTML();
             }
         })
@@ -126,6 +132,52 @@ function addIntern() {
 
 }
 
+function genreateManagerCard () {
+    managerHTML += `<div class="card mx-3 my-5" style="width: 18rem;">
+            <div class="card-body bg-primary text-light">
+              <h5 class="card-title"><strong>${manager.empName}</strong></h5>
+              <p class="card-text">Manager</p>
+            </div>
+            <ul class="list-group list-group-flush p-3 bg-light">
+              <li class="list-group-item">ID #: ${manager.id}</li>
+              <li class="list-group-item">Email: <a href = "mailto: ${manager.email}">${manager.email}</a></li>
+              <li class="list-group-item">Office: ${manager.officeNumber}</li>
+            </ul>
+        </div>`
+}
+
+function generateEngineerCard() {
+    for (let i=0; i < engineer.length; i++){
+       engineerHTML += `<div class="card mx-3 my-5" style="width: 18rem;">
+            <div class="card-body bg-primary text-light">
+              <h5 class="card-title"><strong>${engineer[i].empName}</strong></h5>
+              <p class="card-text">Engineer</p>
+            </div>
+            <ul class="list-group list-group-flush p-3 bg-light">
+              <li class="list-group-item">ID #: ${engineer[i].id}</li>
+              <li class="list-group-item">Email: <a href = "mailto: ${engineer[i].email}">${engineer[i].email}</a></li>
+              <li class="list-group-item">Github: <a href = "github.com/${engineer[i].github}">${engineer[i].github}</a></li>
+            </ul>
+        </div>`
+    }
+}
+
+function generateInternCard() {
+    for (let i=0; i < intern.length; i++){
+       internHTML += `<div class="card mx-3 my-5" style="width: 18rem;">
+            <div class="card-body bg-primary text-light">
+              <h5 class="card-title"><strong>${intern[i].empName}</strong></h5>
+              <p class="card-text">Intern</p>
+            </div>
+            <ul class="list-group list-group-flush p-3 bg-light">
+              <li class="list-group-item">ID #: ${intern[i].id}</li>
+              <li class="list-group-item">Email: <a href = "mailto: ${intern[i].email}">${intern[i].email}</a></li>
+              <li class="list-group-item">School: ${intern[i].school}</li>
+            </ul>
+        </div>`
+    }
+}
+
 function generateHTML(){
     fs.writeFile('./dist/index.html', 
     `
@@ -143,23 +195,14 @@ function generateHTML(){
         <h1>My Team</h1>
     </header>
     <main class="d-flex flex-wrap justify-content-center">
-        <div class="card mx-3 my-5" style="width: 18rem;">
-            <!--Section to be repeated for each employee-->
-            <div class="card-body bg-primary text-light">
-              <h5 class="card-title"><strong>Employee</strong></h5>
-              <p class="card-text">Employee Role</p>
-            </div>
-            <ul class="list-group list-group-flush p-3 bg-light">
-              <li class="list-group-item">ID:</li>
-              <li class="list-group-item">Email:</li>
-              <li class="list-group-item">Office/Github/School:</li>
-            </ul>
-        </div>
+        ${managerHTML}
+        ${engineerHTML}
+        ${internHTML}
     </main>
 </body>
 </html>
     `,
-    (err) => err ? console.error(err) : console.log('HTML file created!'))
+    (err) => err ? console.error(err) : console.log('HTML file created!')) 
 }
 
 init();
